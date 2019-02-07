@@ -12,9 +12,8 @@ describe('Test Async Books', () => {
     it('should return an object with list books with turing in the title', function(done) {
         getBooks('turing').then((result) => {
             let fmtObj = JSON.parse(result);
-
             let books = fmtObj.data;
-
+            console.log(JSON.stringify(books))
             expect(books).to.be.an('object');
             expect(books.items).to.satisfy(function(items) {
                 return items.every(function(item) {
