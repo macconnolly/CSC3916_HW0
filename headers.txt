@@ -1,0 +1,55 @@
+Hi Professor, 
+
+I've done my best to attribute any outside information that I obtained in my explanations to its original source. If you'd like links, please let me know. I just want to be upfront in saying that I did Google a few of these to better understand what they meant and incorporated that language in my explanation. 
+
+Thanks, 
+-Mac
+
+
+Expires →Sun, 10 Feb 2019 21:53:51 GMT 
+The expires header outlines the date and time at which the response is considered 'stale' or invalid. However, in this instance, the Cache-Control header was passed and includes a max-age of zero, the expires header is ignored. Also, in this case the expiration was sent as the time at which the request was originated, which essentially also leaves the response as stale at the time of return
+
+Date →Sun, 10 Feb 2019 21:53:51 GMT
+Date is self explanatory; the date at which the request was received, or in more plain language, the date and time at which the request was originated. 
+
+Cache-Control →private, max-age=0, must-revalidate, no-transform
+The cache control header outlines the caching policy and is present in both the request and the server response. In this case, it was the same value. Max-age is provided in seconds, and in this case is zero. The private flag specifies that any intermediate proxies are not to cache the contents, and that the contents may only be cached on the local machine. 
+
+ETag →"IUREzboS_XZycecz4xfru1ipYfo/f4RU4ihwDUGsZcNLMrldbL5HC5U"
+The Etag header acts essentially as an ID for the specific resource, acting as a sort of fingerprint of the contents. If the URL or the contents contained at the specified URL change, the Etag must also change. 
+
+Vary →Origin
+The Vary header with the origin value indicates that the server's response to the request is dependent on the origin of the request as it was originally sent in the request, and should not be served from any other origin. This is important for caching, compression, and security purposes (helping to prevent CORS exploitations). According to ITEF, the most straightforward way to explain the vary header is as follows: "To inform cache recipients that they MUST NOT use this response to satisfy a later request unless the later request has the same values" and to, "inform user agent recipients that this response is subject to content negotiation." Content negotiation allows for the requestor to specify a particular representation for the response. 
+
+Vary →X-Origin
+
+
+Content-Type →application/json; charset=UTF-8
+From a response standpoint, content-type provides the recipient with an explanation of the content media type. In this case it is represented as JSON with the UTF8 charset, which is  standard for a JSON response. The request was sent as 'application/json; charset=UTF-8' and the server returned data in that requested format. 
+
+Content-Encoding → gzip
+The request for gzipped content and subsequent response allows for a request to be sent for compressed content and the server indicates in the response that the data was in fact returned in this compressed way. This allows the receiver to know what method was used to compress the content, so that they may subsequently decompress it. 
+
+X-Content-Type-Options →nosniff
+The no sniff header provided in the response is in place to keep IE from Internet MIME-sniffing (media type sniffing) a response away from the previously declared content-type header.
+
+X-Frame-Options →SAMEORIGIN
+The X-Frame option response header disallows the display of the resource content on any domain other than its origin, which in this case is googleapis.com in either an iFrame, Frame, Embed, or Object tag. This helps sites ensure that their content is only displayed on their site and is not embedded elsewhere. 
+
+X-XSS-Protection →1; mode=block
+The Cross Site Scripting Protection request and response header acts as a largely secondary defense against cross-site scripting attacks for non-modern browsers. It is largely unnecessary when sites employ a strong Content Security Policy in controlling resources that a user is allowed to load for a given page. The flag of 1 in this response enables XSS filtering. This prevents a browser from rendering the page if an XSS attack is detected? -Source: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection
+
+Server →GSE
+The server header contains information about the software used by the origin server to handle the request. GSE is shorthand for Google Server Engine. It's important that content owners control the information provided here, as specific version numbers and servlet information may give potential attackers information on when, and how often production security patches are implemented by your organization. 
+
+Alt-Svc → quic=":443"; ma=2592000; v="44,43,39"
+The alt-svc response header is shorthand for HTTP Alternative Services. indicates alternate ways to reach the content provided by the server. The QUIC protocol is a network transport layer designed by Google to move from TCP to lower-latency UDP connections. It is specified that for the next 2592000 the client may connect to the origin using the QUIC  protocol versions 44, 43, and 39 on port 443 
+
+Transfer-Encoding →chunked
+The correct usage of transfer encoding requires the client to first specify the Accept-Encoding request header with its preferred and other encodings. The client reads the data from the socket based on the transfer encoding and subsequently decode it based on it's content encoding (usually Gzip). 
+
+The transfer encoding header specifies the form of encoding used to transfer content to the user. Chunked data in this instance transfers breaks the content into non-overlapping chunks. First the content-length header is omitted and replaced by the inclusion in hex format at the beginning of each chunk the length of said current chunk followed by two escape characters, \r and then \n, followed by the chunk itself. The final chunk in the sequence denotes its length as zero and is followed by a trailer containing header fields. 
+
+Transfer-Encoding header is a transport layer definition and differs from the Content-Encoding header which is a data or business layer property. As I researched the difference in use cases for Transfer Encoding and Content Encoding, I found that according to StackOverflow, Transfer-Encoding is not usually employed for compression, while Content-Encoding is used in actuality as a transport level detail rather than business level. 
+
+
